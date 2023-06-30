@@ -9,8 +9,7 @@ from prefect import task, flow
 @task
 def extract_data(url:str, n_rows:int=150)->json:
     """
-    Realiza la petición a la API para obtener los datos
-    pertinentes y los guarda en un csv según la fecha.
+    Makes the request to the API.
     
     args:
         -url (string): url to request to
@@ -68,7 +67,7 @@ def rename_columns(
 @task
 def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Cambia el tipo de las columnas 
+    Changes the column dtype 
     """
     data = df.copy()
 
@@ -82,7 +81,7 @@ def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
 @task
 def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
     """
-    Aplica un Label Encoding a la columna de area
+    Applies label encoding to Area column
     """
 
     data = df.copy()

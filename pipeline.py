@@ -104,7 +104,7 @@ def save_locally(data:pd.DataFrame, path:str) -> None:
 
 
 @task
-def load_to_s3(data:pd.DataFrame, s3_path = "s3://model-experiment"):
+def load_to_s3():
     """
     Carga el versionado del dataframe a un bucket de S3
     """
@@ -140,7 +140,7 @@ def ETL():
     save_locally(data = transformation_2, path = "data/clean/")
     
     # Loads data to s3
-    load_to_s3(data = transformation_2)
+    load_to_s3()
 
 if __name__ == "__main__":
     ETL()

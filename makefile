@@ -8,5 +8,5 @@ push_data:
 
 # Hacemos push a los datos
 	dvc push
-	echo "Data pushed!"
+	echo "DATA PUSHED TO S3 SUCCESSFULLY!"
 

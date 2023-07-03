@@ -2,6 +2,7 @@ import json
 import requests
 import pandas as pd
 from datetime import date
+import subprocess
 from prefect import task, flow
 
 ### REQUEST TO API ###
@@ -94,12 +95,34 @@ def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
     return data
 
 @task
-def load(data:pd.DataFrame, path:str) -> None:
+def save_locally(data:pd.DataFrame, path:str) -> None:
     """
     Saves the file in the specified path
     """
     fecha = date.today()
     data.to_csv(path+f"clean_data_{str(fecha)}.csv",index=False)
+
+
+@task
+def load_to_s3(data:pd.DataFrame, s3_path = "s3://model-experiment"):
+    """
+    Carga el versionado del dataframe a un bucket de S3
+    """
+    comando = "make"
+    proceso = subprocess.Popen(comando, shell = True,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    
+    salida, error = proceso.communicate()
+
+    if proceso.returncode == 0:
+        print("La salida del comando es:")
+        print(salida.decode("utf-8"))
+
+    else:
+        print("Se produjo un error al ejecutar el comando")
+        print(error.decode("utf-8"))
+
 
 @flow
 def ETL():
@@ -114,7 +137,10 @@ def ETL():
     transformation_2 = encode_area_columns(transformation_1)
 
     # Loads the data
-    load(data = transformation_2, path = "data/clean/")
+    save_locally(data = transformation_2, path = "data/clean/")
+    
+    # Loads data to s3
+    load_to_s3(data = transformation_2)
 
 if __name__ == "__main__":
     ETL()

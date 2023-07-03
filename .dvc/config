@@ -3,4 +3,4 @@
 ['remote "remote"']
     url = gdrive://1dvatsOKrz_EWI794ApRLZgxVFtRkATEu?usp=drive_link
 ['remote "mys3remote"']
-    url = ../arn:aws:s3:::model-experiment
+    url = s3://model-experiment

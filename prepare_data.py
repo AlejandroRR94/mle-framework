@@ -6,7 +6,7 @@ from sktime.utils.plotting import plot_series
 import seaborn as sns
 
 def prepare_data(
-    data: pd.DataFrame, target: str = "energy_consumption", fh: int = 24) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    data: pd.DataFrame, target: str = "co2_emissions", fh: int = 24) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Structure the data for training:
     - Set the index as is required by sktime.
@@ -16,8 +16,8 @@ def prepare_data(
     """
 
     # Set the index as is required by sktime.
-    data["datetime_utc"] = pd.PeriodIndex(data["datetime_utc"], freq="H")
-    data = data.set_index(["area", "consumer_type", "datetime_utc"]).sort_index()
+    data["datetime_utc"] = pd.PeriodIndex(data["datetime_utc"], freq="m")
+    data = data.set_index(["area", "datetime_utc"]).sort_index()
 
     # Prepare exogenous variables.
     X = data.drop(columns=[target])

@@ -2,4 +2,4 @@ outs:
 - md5: 377a79358bf320f9126689e88837889f.dir
   nfiles: 7
   hash: md5
-  path: data
+  path: data/clean/

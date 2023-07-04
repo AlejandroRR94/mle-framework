@@ -51,14 +51,13 @@ def rename_columns(
     
     data = df.copy()
 
-    data.drop(columns = ["HourDK"], inplace = True)
+    data.drop(columns = ["Minutes5DK"], inplace = True)
 
     data.rename(
         columns = {
-            "HourUTC": "datetime_utc",
+            "Minutes5UTC": "datetime_utc",
             "PriceArea": "area",
-            "ConsumerType_DE35": "consumer_type",
-            "TotalCon": "energy_consumption",
+            "CO2Emission": "co2_emissions",
         },
         inplace=True
     )
@@ -71,11 +70,11 @@ def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
     Changes the column dtype 
     """
     data = df.copy()
-
+    
     data["datetime_utc"] = pd.to_datetime(data["datetime_utc"])
     data["area"] = data["area"].astype("string")
-    data["consumer_type"] = data["consumer_type"].astype("int32")
-    data["energy_consumption"] = data["energy_consumption"].astype("float64")
+    # data["consumer_type"] = data["consumer_type"].astype("int32")
+    data["co2_emissions"] = data["co2_emissions"].astype("float64")
 
     return data
 
@@ -129,8 +128,9 @@ def ETL():
 
     # Extracts the data from the url
     extraction = extract_data(
-        url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
-        n_rows = 150
+        # url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
+        url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
+        n_rows = 1000
                             )
     transformation_0 = rename_columns(df = extraction)
     transformation_1 = cast_columns(transformation_0)

@@ -5,7 +5,7 @@ push_data: add_data
 
 add_data: establish_remote
 # Añadimos la carpeta cuyos datos queremos versionar
-	dvc add data/clean/*
+	dvc add data/clean/
 
 establish_remote:
 # Establecemos el bucket de s3 al que haremos push

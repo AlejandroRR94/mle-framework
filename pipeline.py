@@ -130,7 +130,7 @@ def ETL():
     extraction = extract_data(
         # url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
         url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
-        n_rows = 1000
+        n_rows = 5000
                             )
     transformation_0 = rename_columns(df = extraction)
     transformation_1 = cast_columns(transformation_0)

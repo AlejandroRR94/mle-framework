@@ -102,7 +102,7 @@ def save_locally(data:pd.DataFrame, path:str) -> None:
     data.to_csv(path+f"clean_data_{str(fecha)}.csv",index=False)
 
 
-@task("Push to AWS S3 Bucket")
+@task(name= "Push to AWS S3 Bucket")
 def load_to_s3():
     """
     Carga el versionado del dataframe a un bucket de S3
@@ -129,8 +129,8 @@ def ETL():
     # Extracts the data from the url
     extraction = extract_data(
         # url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
-        url= 'https://api.energidataservice.dk/datase   t/CO2Emis?limit=5',
-        n_rows = 5000
+        url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
+        n_rows = 8000
                             )
     transformation_0 = rename_columns(df = extraction)
     transformation_1 = cast_columns(transformation_0)

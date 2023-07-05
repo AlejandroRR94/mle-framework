@@ -1,3 +1,4 @@
 /data
 __pycache__
 /arn:aws:s3:::model-experiment
+/mlruns

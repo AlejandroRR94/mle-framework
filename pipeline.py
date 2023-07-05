@@ -7,7 +7,7 @@ from prefect import task, flow
 
 ### REQUEST TO API ###
 
-@task
+@task(name="Extract data from API")
 def extract_data(url:str, n_rows:int=150)->json:
     """
     Makes the request to the API.
@@ -41,7 +41,7 @@ def extract_data(url:str, n_rows:int=150)->json:
 
     return dataframe
 
-@task
+@task(name="Renaming columns")
 def rename_columns(
     df:pd.DataFrame
     ):
@@ -64,7 +64,7 @@ def rename_columns(
 
     return data
 
-@task
+@task(name = "Modifying columns dtype")
 def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
     """
     Changes the column dtype 
@@ -78,7 +78,7 @@ def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     return data
 
-@task
+@task(name = "Encode area")
 def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
     """
     Applies label encoding to Area column
@@ -93,7 +93,7 @@ def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
 
     return data
 
-@task
+@task(name = "Save locally")
 def save_locally(data:pd.DataFrame, path:str) -> None:
     """
     Saves the file in the specified path
@@ -102,7 +102,7 @@ def save_locally(data:pd.DataFrame, path:str) -> None:
     data.to_csv(path+f"clean_data_{str(fecha)}.csv",index=False)
 
 
-@task
+@task("Push to AWS S3 Bucket")
 def load_to_s3():
     """
     Carga el versionado del dataframe a un bucket de S3
@@ -129,7 +129,7 @@ def ETL():
     # Extracts the data from the url
     extraction = extract_data(
         # url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
-        url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
+        url= 'https://api.energidataservice.dk/datase   t/CO2Emis?limit=5',
         n_rows = 5000
                             )
     transformation_0 = rename_columns(df = extraction)

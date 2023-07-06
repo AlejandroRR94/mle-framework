@@ -70,20 +70,20 @@ class DataPreparator():
             suffix = self.path.split(".")[-1]
             print(suffix)
             if suffix == "csv":
-                df = pd.read_csv(self.path)
+                self.df = pd.read_csv(self.path)
             else:
-                df = pd.read_excel(self.path)
+                self.df = pd.read_excel(self.path)
 
         else:
             newest_file = self.get_last_modified_file()
             suffix = newest_file.split(".")[-1]
             
             if suffix == "csv":
-                df = pd.read_csv(newest_file)
+                self.df = pd.read_csv(newest_file)
             else:
-                df = pd.read_excel(newest_file)
+                self.df = pd.read_excel(newest_file)
         
-        return df
+        return self.df
 
 
     # @task

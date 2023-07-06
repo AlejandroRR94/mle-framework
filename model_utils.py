@@ -3,6 +3,7 @@ from sktime.forecasting.model_selection import temporal_train_test_split
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 import xgboost as xgb
+from lightgbm import LGBMRegressor
 
 from prepare_data import * 
 
@@ -13,7 +14,7 @@ class ModelTrainer():
         self.target = target # Nombre de la columna objetivo
 
     # @task
-    def train_k_fold(self, df:pd.DataFrame, k:int=4, test_size:int = 100, gap:int=0)->Tuple[list, list]:
+    def train_k_fold(self, k:int=4, test_size:int = 100, gap:int=0)->Tuple[list, list]:
 
             """
             Entrena un modelo XGBoost con K-Fold Validation
@@ -38,12 +39,13 @@ class ModelTrainer():
                     train = df.iloc[train_idx]
                     test = df.iloc[val_idx]
 
-                    train = DataPreparator.create_features(train)
-                    test = DataPreparator.create_features(test)
+                    dp = DataPreparator()
+                    train = dp.create_features(df=train)
+                    test = dp.create_features(df=test)
 
-                    FEATURES = ['hour', "minute", 'dayofweek']
+                    FEATURES = ['hour', "minute", 'dayofweek', "lag1", "lag2", "lag3"]
 
-                    TARGET = "co2_emissions"
+                    TARGET = self.target
 
                     X_train = train[FEATURES]
                     y_train = train[TARGET]
@@ -73,7 +75,7 @@ class ModelTrainer():
             return reg, preds, scores
 
 
-    def plot_k_folds(self, df, k:int = 4, test_size:int = 100, gap:int = 0):
+    def plot_k_folds(self, k:int = 4, test_size:int = 100, gap:int = 0):
 
         """
         Grafica las diferentes iteraciones que se llevarían a cabo con un
@@ -93,8 +95,8 @@ class ModelTrainer():
         fig, axs = plt.subplots(k, 1, figsize=(10, 10), sharex=True)
         fold = 0
         for train_idx, val_idx in tss.split(df):
-            train = df.iloc[train_idx]['co2_emissions']
-            test = df.iloc[val_idx]['co2_emissions']
+            train = df.iloc[train_idx][self.target]
+            test = df.iloc[val_idx][self.target]
             # plt.title(f'Data Train/Test Split Fold {fold}')
             axs[fold].set_title(f'Data Train/Test Split Fold {fold}')
             axs[fold].plot(train,
@@ -108,4 +110,109 @@ class ModelTrainer():
         
         plt.show()
 
-    def train_model_normal(self):
+    def training_split(self, test_percentage:float=0.2):
+
+        df = self.df.sort_index()
+         
+        test_size = int(len(self.df)*test_percentage)
+        val_size = int(test_size/2)
+        
+        train_set = self.df[:-(test_size)]
+        # val_set = self.df[-(test_size + val_size): - test_size]
+            
+        test_set = self.df[-test_size:]
+
+        return train_set, test_set
+    
+    def make_x_y(self, data_set:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
+         
+        dp = DataPreparator()
+        SET = dp.create_features(data_set)
+         
+        FEATURES = ['hour', "minute", 'dayofweek', "lag1", "lag2", "lag3"]
+        TARGET = self.target
+
+        X = SET[FEATURES]
+        y = SET[TARGET]
+
+        return X, y
+
+
+
+
+    def train_model_normal(self, test_percentage:float,
+                           params:dict=None, lightgbm:bool=False
+                           )->Tuple[object:tuple]:
+        """
+        Entrena un modelo con el split clásico de 2 conjuntos
+        """
+
+        train_set, test_set = self.training_split(test_percentage=test_percentage)
+
+        X_train, y_train = self.make_x_y(train_set)
+        # X_val, y_val = self.make_x_y(val_set)
+        X_test, y_test = self.make_x_y(test_set)
+
+        if params==None:
+            reg = xgb.XGBRegressor(base_score=0.5, booster = "gbtree",
+                                                n_estimators=1000,
+                                                early_stopping_rounds=50,
+                                                objective = "reg:squarederror",
+                                                max_depth = 3,
+                                                learning_rate = 0.01)
+            
+            ligth_reg = LGBMRegressor(base_score=0.5, booster = "gbtree",
+                                                n_estimators=1000,
+                                                early_stopping_rounds=50,
+                                                objective = "reg:squarederror",
+                                                max_depth = 3,
+                                                learning_rate = 0.01)
+        else:
+            reg = xgb.XGBRegressor(**params)
+            light_reg = LGBMRegressor(**params)
+                    
+        
+        if lightgbm:
+             model = light_reg
+             model.fit(X_train, y_train)
+        else:
+             model = reg
+             
+             model.fit(X_train, 
+                y_train,
+                eval_set = [(X_train, y_train), (X_test, y_test)],
+                )
+        
+        return model, (X_test, y_test)
+    
+
+    def train_all_data(self):
+        
+        df = self.df.sort_index()
+        df.drop(["area"], axis = 1, inplace = True)
+
+        dp = DataPreparator()
+        df_features = dp.create_features(df)
+        df_lags = dp.add_lags(df_features)
+
+        FEATURES = ['hour', "minute", 'dayofweek', "lag1", "lag2", "lag3"]
+        
+        X = df_lags[FEATURES]
+        y = df_lags[self.target]
+
+        reg = xgb.XGBRegressor(base_score=0.5, booster = "gbtree",
+                                                n_estimators=1000,
+                                                objective = "reg:squarederror",
+                                                max_depth = 3,
+                                                learning_rate = 0.01)
+        
+        reg.fit(X, y, verbose = 1)
+
+        return reg
+
+
+
+        
+
+
+

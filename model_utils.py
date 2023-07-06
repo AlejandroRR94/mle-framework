@@ -140,7 +140,7 @@ class ModelTrainer():
 
 
 
-    def train_model_normal(self, test_percentage:float,
+    def train_model_normal(self, test_percentage:float=0.2,
                            params:dict=None, lightgbm:bool=False
                            )->Tuple[object:tuple]:
         """
@@ -187,7 +187,7 @@ class ModelTrainer():
         
         score = np.sqrt(mean_squared_error(y_test, y_pred))
         
-        return model, (X_test, y_test), y_pred, score
+        return model, X_train, (X_test, y_test), y_pred, score
     
 
     def train_all_data(self):

@@ -183,7 +183,11 @@ class ModelTrainer():
                 eval_set = [(X_train, y_train), (X_test, y_test)],
                 )
         
-        return model, (X_test, y_test)
+        y_pred = reg.predict(X_test)
+        
+        score = np.sqrt(mean_squared_error(y_test, y_pred))
+        
+        return model, (X_test, y_test), y_pred, score
     
 
     def train_all_data(self):

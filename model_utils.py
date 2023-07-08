@@ -1,3 +1,7 @@
+"""
+Classes used to train the model
+"""
+
 
 from sktime.forecasting.model_selection import temporal_train_test_split
 from sklearn.model_selection import TimeSeriesSplit
@@ -9,6 +13,15 @@ from prepare_data import *
 
 
 class ModelTrainer():
+    """
+    Clase que engloba los métodos para entrenar un modelo.
+
+    Args:
+
+    - df: Pandas DataFrame a utilizar en los diferentes métodos
+    - target: *string* que indica el nombre de la variable objetivo
+
+    """
     def __init__(self, df:pd.DataFrame, target:str):
         self.df = df # Dataframe para utilizar
         self.target = target # Nombre de la columna objetivo
@@ -20,12 +33,14 @@ class ModelTrainer():
             Entrena un modelo XGBoost con K-Fold Validation
             
             Args:
+
                     - df: pd.DataFrame
                     - k: número de folds
                     - test_size: Número de registros reservados para evaluar el modelo
 
 
             Retorna:
+
                     - Tupla con las predicciones y las métricas
             """
             
@@ -82,10 +97,15 @@ class ModelTrainer():
         k-fold en las series temporales
 
         Args:
+
             - df: pandas dataframe
             - k: número de folds
             - test_size: número de registros
             - gap: número de registros de espacio entre secuencias
+
+        Returns:
+
+        - Gráfico con los diferentes k-folds
         """
 
         tss = TimeSeriesSplit(n_splits=k, test_size=test_size, gap=gap)
@@ -111,6 +131,16 @@ class ModelTrainer():
         plt.show()
 
     def training_split(self, test_percentage:float=0.2):
+        """
+        Realiza la separación entre los conjuntos de entrenamiento y
+        evaluación según el porcentaje indicado en el argumento *test_percentage*
+
+        Args:
+
+        - test_percentage: *float* que indica el porcentaje de los datos destinado a
+        evaluar el modelo
+
+        """
 
         df = self.df.sort_index()
          
@@ -125,6 +155,18 @@ class ModelTrainer():
         return train_set, test_set
     
     def make_x_y(self, data_set:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        A partir de un dataset, genera las variables X e y para realizar el
+        entrenamiento
+
+        Args:
+
+        - data_set: pandas dataframe del qeu extraer X e y
+
+        Returns:
+
+        - X, y: Tupla de variables atributo y variable target
+        """
          
         dp = DataPreparator()
         SET = dp.create_features(data_set)
@@ -145,6 +187,22 @@ class ModelTrainer():
                            )->Tuple[object:tuple]:
         """
         Entrena un modelo con el split clásico de 2 conjuntos
+
+
+        Args:
+        
+            - test_percentage
+            - params: diccionario de parámetros para pasar al XGBoost o al 
+            LightGBM
+            - lightgbm: booleano que indica si se va a utilizar un LightGBM
+
+
+        Returns:
+
+            - model: objeto del modelo
+            - X_train: Variables atributo de entrenamiento
+            - 
+
         """
 
         train_set, test_set = self.training_split(test_percentage=test_percentage)

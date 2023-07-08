@@ -1,13 +1,23 @@
+"""
+Script that defines the ETL pipeline
+"""
+
+
+
 import json
 import requests
 import pandas as pd
 from datetime import date
 import subprocess
 from prefect import task, flow
+import sqlite3
+import boto3
 
 ### REQUEST TO API ###
 
-@task(name="Extract data from API")
+@task(name="Extract data from API",
+      description="This task makes a request to the energydata API",
+      retries=5, retry_delay_secondsn=10)
 def extract_data(url:str, n_rows:int=150)->json:
     """
     Makes the request to the API.
@@ -41,7 +51,8 @@ def extract_data(url:str, n_rows:int=150)->json:
 
     return dataframe
 
-@task(name="Renaming columns")
+@task(name="Renaming columns",
+      description="Changes column names")
 def rename_columns(
     df:pd.DataFrame
     ):
@@ -64,7 +75,8 @@ def rename_columns(
 
     return data
 
-@task(name = "Modifying columns dtype")
+@task(name = "Modifying columns dtype",
+      description= "Casts different dtypes on columns")
 def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
     """
     Changes the column dtype 
@@ -78,7 +90,8 @@ def cast_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     return data
 
-@task(name = "Encode area")
+@task(name = "Encode area",
+      description = "Encoding the area column values DK to 0, and so on.")
 def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
     """
     Applies label encoding to Area column
@@ -93,7 +106,8 @@ def encode_area_columns(df:pd.DataFrame) -> pd.DataFrame:
 
     return data
 
-@task(name = "Save locally")
+@task(name = "Save locally",
+      description = "Saves the csv locally")
 def save_locally(data:pd.DataFrame, path:str) -> None:
     """
     Saves the file in the specified path
@@ -102,7 +116,23 @@ def save_locally(data:pd.DataFrame, path:str) -> None:
     data.to_csv(path+f"clean_data_{str(fecha)}.csv",index=False)
 
 
-@task(name= "Push to AWS S3 Bucket")
+@task(name = "load to database",
+      description = "Loads the csv to the energy_data database")
+def add_to_db(data):
+    
+    con = sqlite3.connect("data/database/energy_data.db")
+    data.to_sql("ENERGY_DATA", con, if_exists = "append", index=False)
+
+    # ELIMINAMOS DUPLICADOS
+    # cur = con.cursor()
+
+    # con.commit() # Ejecuta cambios en los datos
+    # con.close() # Cierra conexión
+
+
+
+@task(name= "Push to AWS S3 Bucket",
+      description = "pushes csv to s3")
 def load_to_s3():
     """
     Carga el versionado del dataframe a un bucket de S3
@@ -138,6 +168,9 @@ def ETL():
 
     # Loads the data
     save_locally(data = transformation_2, path = "data/clean/")
+    
+    # Saves the data to a local database
+    add_to_db(data=transformation_2)
     
     # Loads data to s3
     load_to_s3()

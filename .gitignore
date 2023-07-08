@@ -3,4 +3,3 @@ __pycache__
 /arn:aws:s3:::model-experiment
 /mlruns
 /database/energy_data.db
-!/database/energy_data.db

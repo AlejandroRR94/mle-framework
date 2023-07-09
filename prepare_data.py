@@ -41,13 +41,14 @@ class DataPreparator():
          self.path = path
 
          
-    def get_last_modified_file(self):
+    def get_last_modified_file(self, alternative_path:str=None):
         """
         Ordena los archivos según su fecha de modificación en un diccionario
         para obtener el último
         
         Retorna: directorio del archivo modificado en último lugar
         """
+
         files = [os.path.join(self.path, f) for f in os.listdir(self.path)]
         # file_dict = {os.path.getmtime(f):f for f in files}
         file_dict = {os.path.getmtime(f)+i:f for f,i in zip(files, range(len(files)))}

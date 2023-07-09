@@ -17,7 +17,8 @@ import boto3
 
 @task(name="Extract data from API",
       description="This task makes a request to the energydata API",
-      retries=5, retry_delay_secondsn=10)
+      retries=5, 
+      retry_delay_seconds=10)
 def extract_data(url:str, n_rows:int=150)->json:
     """
     Makes the request to the API.

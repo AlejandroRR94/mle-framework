@@ -11,7 +11,8 @@ import mlflow
 from mlflow.models import Model, infer_signature
 import mlflow.sklearn
 import logging
-
+import datetime
+import joblib
 
 
 
@@ -32,12 +33,17 @@ with mlflow.start_run():
 
     mt = ModelTrainer(df=df_1, target = "co2_emissions")
 
-    # MODIFICAR SCRIPT PARA QUE RETORNE EL OBJETO DEL MODELO
     model,X_train, (X_test, y_test), y_pred, score = mt.train_model_normal(test_percentage=0.2)
+
+    joblib.dump(X_test, "data/test_attributes.pkl")
+    joblib.dump(y_test, "data/test_target.pkl")
+
+
+    mt.save_model(model, "models/model")
 
     signature = infer_signature(X_train, y_pred)
     
-    print(type(model))
+    # print(type(model))
 
     # mlflow.xgboost.log_model(model,
     #                          artifact_path = "/mlruns/0/0e25f2e88bb44228841e04d3fe901532/artifacts/model/model.xgb",

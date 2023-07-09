@@ -9,6 +9,8 @@ from sklearn.metrics import mean_squared_error
 import xgboost as xgb
 from lightgbm import LGBMRegressor
 import pickle
+import joblib
+import datetime
 
 from prepare_data import * 
 
@@ -285,15 +287,16 @@ class ModelTrainer():
         """
         Guardamos el modelo tanto en formato pickle como en formato
         txt para una mejor representación y más facilidad en debugging
-        """
+        """            
+        import datetime
 
-        pickle.dump(model, open(filename, "wb"))
-            
         date = datetime.date.today()
-        #  Guardamos el modelo como pickle
-        model.save_model(f"xgboost_{filename}_{date}.pkl")
+        joblib.dump(model, f"{filename}_xgboost_{date}.pkl")
+        
+        # model.save_model(f"{filename}_xgboost_{date}.pkl")
+        model.save_model(f"{filename}_xgboost_{date}.json")
         # Guardamos la representación del modelo para futuros debuggings
-        model.dump_model(f"xgboost_{filename}_{date}.txt")
+        # model.dump_model(f"{filename}_xgboost_{date}.txt")
     
          
         
@@ -303,7 +306,7 @@ class ModelTrainer():
          Cargamos el modelo
          """
          
-         xgb_model = pickle.load(open(filename, "rb"))
+         xgb_model = joblib.load(filename)
 
          return xgb_model
     

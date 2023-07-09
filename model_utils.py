@@ -8,6 +8,7 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 import xgboost as xgb
 from lightgbm import LGBMRegressor
+import pickle
 
 from prepare_data import * 
 
@@ -249,6 +250,13 @@ class ModelTrainer():
     
 
     def train_all_data(self):
+        """
+        Entrena con todos los datos
+
+        Retorna:
+
+        - Objeto con el modelo entrenado
+        """
         
         df = self.df.sort_index()
         df.drop(["area"], axis = 1, inplace = True)
@@ -271,6 +279,34 @@ class ModelTrainer():
         reg.fit(X, y, verbose = 1)
 
         return reg
+    
+    def save_model(self, model:object, filename:str):
+              
+        """
+        Guardamos el modelo tanto en formato pickle como en formato
+        txt para una mejor representación y más facilidad en debugging
+        """
+
+        pickle.dump(model, open(filename, "wb"))
+            
+        date = datetime.date.today()
+        #  Guardamos el modelo como pickle
+        model.save_model(f"xgboost_{filename}_{date}.pkl")
+        # Guardamos la representación del modelo para futuros debuggings
+        model.dump_model(f"xgboost_{filename}_{date}.txt")
+    
+         
+        
+    def load_model(self, model:object, filename:str):
+         
+         """
+         Cargamos el modelo
+         """
+         
+         xgb_model = pickle.load(open(filename, "rb"))
+
+         return xgb_model
+    
 
 
 

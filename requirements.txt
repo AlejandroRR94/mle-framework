@@ -1,5 +1,4 @@
 boto3==1.26.165
-boto3==1.26.159
 joblib==1.2.0
 lightgbm==3.3.5
 matplotlib==3.7.1

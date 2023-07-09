@@ -182,28 +182,5 @@ class DataPreparator():
         return df_1, df_2
 
 
-def add_to_db(data):
-    
-    con = sqlite3.connect("data/database/energy_data.db")
-    data.to_sql("ENERGY_DATA", con, if_exists = "append", index=False)
-
-    # ELIMINAMOS DUPLICADOS
-    cur = con.cursor()
-    cur.execute(
-        """
-        DELETE FROM ENERGY_DATA
-        WHERE rowid NOT IN
-            (
-            SELECT MIN(row_id)
-            FROM ENERGY_DATA
-            GROUP BY ENERGY_DATA
-            )
-        """
-    )
-
-    con.commit() # Ejecuta cambios en los datos
-    con.close() # Cierra conexión
-
-
 
      

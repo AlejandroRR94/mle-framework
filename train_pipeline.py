@@ -17,6 +17,7 @@ import logging
 
 
 # ESTABLECER TRACKING URI
+
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 

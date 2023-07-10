@@ -1,4 +1,8 @@
-/data
+/data/clean
+/data/database
+/data/raw
+
+
 __pycache__
 /arn:aws:s3:::model-experiment
 /mlruns

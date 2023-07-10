@@ -15,11 +15,14 @@ jobs:
         with:
           python-version: '3.11.3'
       - uses: iterative/setup-cml@v1
-      - name: check model
+      - name: install dependencies
         run: |
           # Your ML workflow goes here
           pip install -r requirements.txt
-          pytest tests.py
+          
+      - name: run tests
+        run: |
+          pytest test.py
 
       # - name: Write CML report
       #   env:

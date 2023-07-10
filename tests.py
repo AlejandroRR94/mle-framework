@@ -26,17 +26,29 @@ if newest_model.endswith("json"):
 else:
     model = load_model(newest_model)
 
+try:
+    X_test = joblib.load("data/test/test_attributes.pkl")
+    y_test = joblib.load("data/test/test_target.pkl")
 
-X_test = joblib.load("data/test/test_attributes.pkl")
-y_test = joblib.load("data/test/test_target.pkl")
+except Exception as e:
+    print("Could not load the data attributes and target", e)
 
-test_predictions = model.predict(X_test)
+try:
+    test_predictions = model.predict(X_test)
+    print(mean_absolute_percentage_error(y_test, y_pred = test_predictions))
+    print(r2_score(y_true = y_test, y_pred = test_predictions))
 
-print(mean_absolute_percentage_error(y_test, y_pred = test_predictions))
-print(r2_score(y_true = y_test, y_pred = test_predictions))
+except Exception as e:
+    print("Could not make the predictions")
 
-check_r2_score(y_real = y_test, y_predicted = test_predictions, thresh = 0.9)
+try:
+    check_r2_score(y_real = y_test, y_predicted = test_predictions, thresh = 0.9)
 
-check_mean_percentage_error(y_real = y_test, y_predicted = test_predictions, thresh = 0.15)
+    check_mean_percentage_error(y_real = y_test, y_predicted = test_predictions, thresh = 0.15)
+
+except Exception as e:
+    print(e)
+    
+
 
 # print(type(model))

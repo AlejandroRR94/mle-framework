@@ -11,9 +11,9 @@ jobs:
       # - uses: actions/setup-node@v3
       #   with:
       #     node-version: '16'
-      # - uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.x'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.3'
       - uses: iterative/setup-cml@v1
       - name: check model
         run: |
@@ -24,7 +24,7 @@ jobs:
       # - name: Write CML report
       #   env:
       #     REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
+      #   run: | 
       #     # Post reports as comments in GitHub PRs
       #     cat results.txt >> report.md
       #     cml comment create report.md

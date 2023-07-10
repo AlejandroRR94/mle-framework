@@ -11,3 +11,4 @@ scikit_learn==1.2.2
 seaborn==0.12.2
 sktime==0.20.0
 xgboost==1.7.6
+pydantic==2.0.2

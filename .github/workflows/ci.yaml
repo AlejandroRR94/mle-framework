@@ -19,7 +19,7 @@ jobs:
         run: |
           # Your ML workflow goes here
           pip install -r requirements.txt
-          python tests.py
+          pytest tests.py
 
       # - name: Write CML report
       #   env:

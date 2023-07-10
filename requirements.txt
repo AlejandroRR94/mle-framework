@@ -12,3 +12,4 @@ seaborn==0.12.2
 sktime==0.20.0
 xgboost==1.7.6
 pydantic==1.10.11
+pytest==7.4.0

@@ -17,8 +17,6 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 import xgboost as xgb
 
-# Librearía Orquestación
-from prefect import task, flow
 
 # Librería para la creación de DB
 import sqlite3
@@ -57,7 +55,7 @@ class DataPreparator():
 
 
 
-    # @task
+    
     def load_data(self)->pd.DataFrame:
         """
         Por defecto, carga el archivo más reciente en el directorio.
@@ -90,7 +88,7 @@ class DataPreparator():
         return self.df
 
 
-    # @task
+    
     def separate_by_area(self, data:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Separa los datos según el area de consumo
@@ -102,7 +100,7 @@ class DataPreparator():
         return df_1, df_2
 
 
-    # @task
+    
     def split_data(self,
         data: pd.DataFrame, target: str = "co2_emissions", fh: int = 24) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
@@ -128,7 +126,7 @@ class DataPreparator():
 
 
 
-    # @task
+    
     def create_features(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Crea atributos de series temporales basándose en el índice en formato datetime.
@@ -151,7 +149,7 @@ class DataPreparator():
         
         return df
 
-    # @task
+    
     def add_lags(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Añade variables para saber cuál era el valor de la serie temporal 5, 10 y 15 minutos
@@ -164,7 +162,7 @@ class DataPreparator():
         return df
     
 
-# @task(name = "Pipeline de carga y preparación de datos")
+
     def get_data(self)->Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Pipeline para obtener los datos y prepararlos

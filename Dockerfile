@@ -11,4 +11,4 @@ COPY * app/
 RUN pip install -r app/requirements.txt
 
 # Specify the command to run when the container starts
-CMD ["python", "tests.py"]
+CMD ["pytest", "tests.py"]

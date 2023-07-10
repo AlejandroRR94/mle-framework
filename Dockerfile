@@ -1,14 +1,14 @@
 # Use a base image with the desired operating system and installed dependencies
-FROM python:3.11.3
+FROM python:3.11
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /
 
 # Copy the code into the container
-COPY * app/
+COPY . .
 
 # Install dependencies
-RUN pip install -r app/requirements.txt
+RUN pip install -r /requirements.txt
 
 # Specify the command to run when the container starts
-CMD ["pytest", "test.py"]
+CMD ["pytest",  "/test.py"]

@@ -26,6 +26,7 @@ if newest_model.endswith("json"):
 else:
     model = load_model(newest_model)
 
+
 X_test = joblib.load("data/test/test_attributes.pkl")
 y_test = joblib.load("data/test/test_target.pkl")
 

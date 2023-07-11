@@ -48,9 +48,9 @@ RUN mkdir data/clean data/raw data/database
 # Install dependencies
 RUN pip install -r requirements.txt
 
-RUN python etl_pipeline.py
+RUN python pipelines/etl_pipeline.py
 
-RUN python train_pipeline.py
+RUN python pipelines/train_pipeline.py
 
 # Specify the command to run when the container starts
 # CMD ["pytest",  "/test.py"]

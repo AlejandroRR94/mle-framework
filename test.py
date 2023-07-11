@@ -3,7 +3,7 @@ import joblib
 import pickle
 import xgboost as xgb
 import numpy as np
-from utils.test_utils import get_last_model
+from my_utils.test_utils import get_last_model
 from sklearn.metrics import r2_score, mean_absolute_percentage_error
 
 class TestClass:

@@ -1,11 +1,13 @@
+"""
+Main.py that executes the whole flow
+"""
 
 
-import sys
 import os
+import pathlib
+import sys
 
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append("/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/my_utils")
-# print(sys.path)
+sys.path.append(os.path.join(pathlib.Path(__file__).parent, "my_utils"))
 
 from model_utils import *
 from prepare_data_utils import *

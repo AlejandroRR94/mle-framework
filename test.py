@@ -1,11 +1,16 @@
+
+import os
+import pathlib
 import sys
-sys.path.append("/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/my_utils")
+
+sys.path.append(os.path.join(pathlib.Path(__file__).parent, "my_utils"))
 
 import pytest
 import joblib
 import pickle
 import xgboost as xgb
 import numpy as np
+
 from test_utils import get_last_model
 from sklearn.metrics import r2_score, mean_absolute_percentage_error
 
@@ -43,6 +48,3 @@ class TestClass:
         except AssertionError as msg:
             print("MAPE > 0.15!\n")
             print(msg)
-
-        
-

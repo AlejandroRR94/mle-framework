@@ -155,6 +155,7 @@ class DataPreparator():
         Añade variables para saber cuál era el valor de la serie temporal 5, 10 y 15 minutos
         previos al registro correspondiente.
         """
+        print(df.columns)
         target_map = df['co2_emissions'].to_dict()
         df['lag1'] = (df.index - pd.Timedelta('5 minutes')).map(target_map)
         df['lag2'] = (df.index - pd.Timedelta('10 minutes')).map(target_map)
@@ -172,13 +173,13 @@ class DataPreparator():
 
         df_1, df_2 = self.separate_by_area(data)
 
-        df_1 = self.create_features(df_1)
-        df_1 = self.add_lags(df_1)
+        df_1_features = self.create_features(df_1)
+        df_1_final = self.add_lags(df_1_features)
 
-        df_2 = self.create_features(df_2)
-        df_2 = self.add_lags(df_2)
+        df_2_features = self.create_features(df_2)
+        df_2_final = self.add_lags(df_2_features)
 
-        return df_1, df_2
+        return df_1_final, df_2_final
 
 
 

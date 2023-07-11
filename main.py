@@ -1,5 +1,14 @@
-from utils.model_utils import *
-from utils.prepare_data_utils import *
+
+
+import sys
+import os
+
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append("/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/my_utils")
+# print(sys.path)
+
+from model_utils import *
+from prepare_data_utils import *
 import subprocess
 from prefect import task, flow
 

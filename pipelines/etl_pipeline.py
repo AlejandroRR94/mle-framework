@@ -11,7 +11,9 @@ from prefect import task, flow
 import sqlite3
 import boto3
 
+
 ### REQUEST TO API ###
+
 
 @task(name="Extract data from API",
       description="This task makes a request to the energydata API",

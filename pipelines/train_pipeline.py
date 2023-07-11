@@ -3,9 +3,8 @@ Training pipeline
 """
 
 
-
-from prepare_data import *
-from model_utils import * 
+from utils.prepare_data_utils import *
+from utils.model_utils import * 
 
 import mlflow
 from mlflow.models import Model, infer_signature
@@ -28,18 +27,18 @@ mlflow.xgboost.autolog()
 with mlflow.start_run():
     
     # Preparación de datos
-    dp = DataPreparator(path = "data/clean/")
+    dp = DataPreparator(path = "../data/clean/")
     df_1, df_2 = dp.get_data()
 
     mt = ModelTrainer(df=df_1, target = "co2_emissions")
 
     model,X_train, (X_test, y_test), y_pred, score = mt.train_model_normal(test_percentage=0.2)
 
-    joblib.dump(X_test, "data/test_attributes.pkl")
-    joblib.dump(y_test, "data/test_target.pkl")
+    joblib.dump(X_test, "../data/test_attributes.pkl")
+    joblib.dump(y_test, "../data/test_target.pkl")
 
 
-    mt.save_model(model, "models/model")
+    mt.save_model(model, "../models/model")
 
     signature = infer_signature(X_train, y_pred)
     

@@ -25,6 +25,11 @@ FROM python:3.11.3
 # RUN apt-get install -y python3
 
 # Set the working directory inside the container
+# check our python environment
+
+RUN python3 --version
+RUN pip3 --version
+
 RUN mkdir app
 
 WORKDIR /app

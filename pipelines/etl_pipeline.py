@@ -2,8 +2,6 @@
 Script that defines the ETL pipeline
 """
 
-
-
 import json
 import requests
 import pandas as pd
@@ -47,7 +45,7 @@ def extract_data(url:str, n_rows:int=150)->json:
     fecha = date.today()
 
     dataframe = pd.DataFrame(records)
-    dataframe.to_csv(f"data/raw/data_{fecha}.csv", index=False)
+    dataframe.to_csv(f"../data/raw/data_{fecha}.csv", index=False)
 
 
     return dataframe
@@ -168,7 +166,7 @@ def ETL():
     transformation_2 = encode_area_columns(transformation_1)
 
     # Loads the data
-    save_locally(data = transformation_2, path = "data/clean/")
+    save_locally(data = transformation_2, path = "../data/clean/")
     
     # Saves the data to a local database
     add_to_db(data=transformation_2)

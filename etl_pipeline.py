@@ -2,8 +2,6 @@
 Script that defines the ETL pipeline
 """
 
-
-
 import json
 import requests
 import pandas as pd
@@ -13,7 +11,9 @@ from prefect import task, flow
 import sqlite3
 import boto3
 
+
 ### REQUEST TO API ###
+
 
 @task(name="Extract data from API",
       description="This task makes a request to the energydata API",

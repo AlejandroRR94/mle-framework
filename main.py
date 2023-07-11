@@ -3,17 +3,10 @@ Main.py that executes the whole flow
 """
 
 
-import os
-import pathlib
-import sys
-
-sys.path.append(os.path.join(pathlib.Path(__file__).parent, "my_utils"))
-
-from model_utils import *
-from prepare_data_utils import *
+from functions.model_utils import *
+from functions.prepare_data_utils import *
 import subprocess
 from prefect import task, flow
-
 
 
 if __name__ == "__main__":
@@ -23,7 +16,7 @@ if __name__ == "__main__":
         """
         Ejecuta el script "etl_pìpeline.py"
         """
-        comando = "python pipelines/etl_pipeline.py"
+        comando = "python etl_pipeline.py"
         proceso = subprocess.Popen(comando, shell = True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -43,7 +36,7 @@ if __name__ == "__main__":
         """
         Ejejcuta el script "train_pipeline.py"
         """
-        comando = "python pipelines/train_pipeline.py"
+        comando = "python train_pipeline.py"
         proceso = subprocess.Popen(comando, shell = True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)

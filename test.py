@@ -11,7 +11,7 @@ import pickle
 import xgboost as xgb
 import numpy as np
 
-from test_utils import get_last_model
+from functions.test_utils import get_last_model
 from sklearn.metrics import r2_score, mean_absolute_percentage_error
 
 class TestClass:

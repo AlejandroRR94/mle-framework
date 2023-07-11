@@ -14,7 +14,7 @@ import datetime
 import pandas as pd
 from typing import Tuple
 
-from prepare_data_utils import *
+from functions.prepare_data_utils import *
 
 
 class ModelTrainer():

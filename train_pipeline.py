@@ -13,20 +13,9 @@ import sys
 import pathlib
 import os
 
-# import importlib.util
-# import sys
-# spec = importlib.util.spec_from_file_location("module.name", "/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/my_utils/prepare_data_utils.py")
-# foo = importlib.util.module_from_spec(spec)
-# sys.modules["prepare_data_utils.DataPreparator"] = foo
-# spec.loader.exec_module(foo)
-# dp = foo.DataPreparator()
-
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append("/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/my_utils")
 # print(sys.path)
-
-from prepare_data_utils import *
-from model_utils import *
+from functions.prepare_data_utils import *
+from functions.model_utils import *
 
 # ESTABLECER TRACKING URI
 
@@ -48,8 +37,8 @@ with mlflow.start_run():
 
     model,X_train, (X_test, y_test), y_pred, score = mt.train_model_normal(test_percentage=0.2)
 
-    joblib.dump(X_test, "data/test_attributes.pkl")
-    joblib.dump(y_test, "data/test_target.pkl")
+    joblib.dump(X_test, "data/test/test_attributes.pkl")
+    joblib.dump(y_test, "data/test/test_target.pkl")
 
 
     mt.save_model(model, "models/model")

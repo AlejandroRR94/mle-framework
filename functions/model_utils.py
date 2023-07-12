@@ -253,7 +253,7 @@ class ModelTrainer():
         return model, X_train, (X_test, y_test), y_pred, train_metrics 
     
 
-    def create_metrics_dict(self, model, y_true, y_pred, filename:str):
+    def create_metrics_dict(self, model, y_true, y_pred, filename:str, date:datetime):
          """
          Crea log con las métricas de interés del entrenamiento. Si no existe, 
          lo crea
@@ -262,7 +262,7 @@ class ModelTrainer():
 
          - diccionario con los datos.
          """
-         date = datetime.now()
+        #  date = datetime.now()
 
          if "gboost" in str(type(model)):
               model = "xgboost"
@@ -306,13 +306,13 @@ class ModelTrainer():
          
          return metrics
     
-    def save_inference_metrics(self, filename:str, model, y_true, y_pred):
+    def save_inference_metrics(self, filename:str, model, y_true, y_pred, date):
         """
         Recibe las métricas calculadas en la función create_metrics_dict()
         y las añade al json existente
         """
         
-        metrics = self.create_metrics_dict(model, y_true, y_pred, filename)
+        metrics = self.create_metrics_dict(model, y_true, y_pred, filename, date=date)
 
         if os.path.isfile(filename): 
             with open(filename) as il:

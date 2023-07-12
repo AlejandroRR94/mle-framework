@@ -130,8 +130,6 @@ def add_to_db(data):
     # con.commit() # Ejecuta cambios en los datos
     # con.close() # Cierra conexión
 
-
-
 @task(name= "Push to AWS S3 Bucket",
       description = "pushes csv to s3")
 def load_to_s3():

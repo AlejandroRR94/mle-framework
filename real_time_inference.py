@@ -13,6 +13,7 @@ import lightgbm as lgb
 import os
 import pathlib
 import sys
+import joblib
 import datetime
 
 
@@ -52,8 +53,12 @@ class real_time_inference():
 
         X, y = df_1.drop(["co2_emissions", "area"], axis = 1), df_1.co2_emissions
 
+        # Guardamos los archivos que simulan el escenario de real time para guardar histórico
+        date = datetime.datetime.now()
+        joblib.dump(X, f"data/real_time_data/attributes/realtime_attributes_{date}.pkl")
+        joblib.dump(y, f"data/real_time_data/targets/realtime_targets_{date}.pkl")
 
-        predictions = model.predict(X)
+        predictions = model.predict(X)      
 
         # Instanciamos la clase ModelTrainer para hacer uso de sus métodos
         mt = ModelTrainer(df=df_1, target="co2_emissions")
@@ -63,11 +68,9 @@ class real_time_inference():
 
         # Actualizamos el json de métricas
         mt.save_inference_metrics(filename= "logs/inference_logs.json",
-                                    model=model, y_true = y, y_pred = predictions
+                                    model=model, y_true = y, y_pred = predictions, date=date
                                     )
         
-
-
 if __name__ == "__main__":
 
     rti = real_time_inference(n_rows=100)

@@ -164,13 +164,14 @@ class DataPreparator():
     
 
 
-    def get_data(self)->Tuple[pd.DataFrame, pd.DataFrame]:
+    def get_data(self, data:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Pipeline para obtener los datos y prepararlos
         """
         
-        data = self.load_data()
-
+        if data is None:
+            data = self.load_data()
+        
         df_1, df_2 = self.separate_by_area(data)
 
         df_1_features = self.create_features(df_1)

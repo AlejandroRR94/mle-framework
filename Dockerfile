@@ -6,6 +6,7 @@ RUN mkdir app
 
 WORKDIR /app
 
+LABEL version="1.0"
 # Copy the code into the container
 
 # RUN cd app

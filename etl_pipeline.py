@@ -155,13 +155,13 @@ def load_to_s3():
 
 
 @flow
-def ETL():
+def ETL(n_rows:int=8000):
 
     # Extracts the data from the url
     extraction = extract_data(
         # url = 'https://api.energidataservice.dk/dataset/ConsumptionDE35Hour?limit=150',
         url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
-        n_rows = 8000
+        n_rows = n_rows
                             )
     transformation_0 = rename_columns(df = extraction)
     transformation_1 = cast_columns(transformation_0)

@@ -2,10 +2,10 @@
 Classes used to train the model
 """
 
-
+import json
 from sktime.forecasting.model_selection import temporal_train_test_split
 from sklearn.model_selection import TimeSeriesSplit
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, r2_score
 import xgboost as xgb
 from lightgbm import LGBMRegressor
 import pickle
@@ -248,10 +248,113 @@ class ModelTrainer():
         
         y_pred = reg.predict(X_test)
         
-        score = np.sqrt(mean_squared_error(y_test, y_pred))
+        train_metrics = self.save_metrics(model = model, y_true = y_test, y_pred = y_pred)
         
-        return model, X_train, (X_test, y_test), y_pred, score
+        return model, X_train, (X_test, y_test), y_pred, train_metrics 
     
+
+    def create_metrics_dict(self, model, y_true, y_pred, filename:str):
+         """
+         Crea log con las métricas de interés del entrenamiento. Si no existe, 
+         lo crea
+
+         Retorna:
+
+         - diccionario con los datos.
+         """
+         date = datetime.now()
+
+         if "gboost" in str(type(model)):
+              model = "xgboost"
+         else:
+              model="lightgbm"
+         
+         if os.path.isfile(filename) == False:
+            models = [model]
+            dates = [date]
+            R2_score = [r2_score(y_true = y_true, y_pred = y_pred)]
+            MAPE = [mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred)]
+            MAE = [mean_absolute_error(y_true = y_true, y_pred = y_pred)]
+            RMSE = [np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)
+                                         )]
+            
+            metrics = {
+                 "model":models,
+                 "training_date":dates,
+                 "r2_score":R2_score,
+                 "MAPE":MAPE,
+                 "MAE":MAE,
+                 "RMSE":RMSE
+            }
+
+            # out_file = open(filename, "w")
+            # json.dump(metrics, out_file, indent=0, default=str)
+            # out_file.close()
+         
+         else:
+            
+              metrics = {
+                "model": model,
+                "training_date": date,
+                "r2_score":r2_score(y_true = y_true, y_pred = y_pred),
+                "MAPE":mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred),
+                "MAE": mean_absolute_error(y_true = y_true, y_pred = y_pred),
+                "RMSE":np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)),
+            }
+              
+             
+         
+         return metrics
+    
+    def save_inference_metrics(self, filename:str, model, y_true, y_pred):
+        """
+        Recibe las métricas calculadas en la función create_metrics_dict()
+        y las añade al json existente
+        """
+        
+        metrics = self.create_metrics_dict(model, y_true, y_pred, filename)
+
+        if os.path.isfile(filename): 
+            with open(filename) as il:
+                    inference_json = json.load(il)
+            
+            for k, v in zip(inference_json.keys(), metrics.values()):
+                    inference_json[k].append(v)
+
+            out_file = open(filename, "w")
+            json.dump(inference_json, out_file, indent = 0, default = str)
+            out_file.close()
+
+            return inference_json
+        
+        else:
+            with open(filename, "w") as out_file:
+                  json.dump(metrics, out_file, indent=0, default=str)
+
+            return metrics
+
+    
+    def save_data_logs(self, X:pd.DataFrame, key:str, training_logs:dict, inference_logs:dict):
+         """
+         Guardar log con los principales estadísticos de los datos
+
+         Argumentos:
+
+         - X: Atributos de los datos
+
+         Retorna:
+
+         - json con la información
+         """
+
+         logs = {
+              "training": training_logs,
+              "inference": inference_logs
+              
+         }
+
+         return logs
+
 
     def train_all_data(self):
         """
@@ -311,11 +414,3 @@ class ModelTrainer():
          xgb_model = joblib.load(filename)
 
          return xgb_model
-    
-
-
-
-        
-
-
-

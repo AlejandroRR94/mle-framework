@@ -16,7 +16,8 @@ LABEL version="1.0"
 COPY . .
 # RUN mv .. .
 # RUN mkdir data/clean data/raw data/test
-RUN mkdir data/clean data/raw data/database data/test data/real_time_data/ data/real_time_data/attributes data/real_time_data/targets
+RUN mkdir data/clean data/raw data/database data/test 
+RUN mkdir data/real_time_data/ data/real_time_data/attributes data/real_time_data/targets
 
 # Install dependencies
 RUN pip install -r requirements.txt

@@ -35,7 +35,9 @@ with mlflow.start_run():
 
     mt = ModelTrainer(df=df_1, target = "co2_emissions")
 
-    model,X_train, (X_test, y_test), y_pred, score = mt.train_model_normal(test_percentage=0.2)
+    model,X_train, (X_test, y_test), y_pred, scores = mt.train_model_normal(test_percentage=0.2)
+    
+    mt.save_inference_metrics(model=model, filename="logs/inference_logs.json", y_true=y_test, y_pred=y_pred)
 
     joblib.dump(X_test, "data/test/test_attributes.pkl")
     joblib.dump(y_test, "data/test/test_target.pkl")

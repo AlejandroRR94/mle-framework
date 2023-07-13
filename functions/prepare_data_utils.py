@@ -164,7 +164,7 @@ class DataPreparator():
     
 
 
-    def get_data(self, data:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
+    def get_data(self, data:pd.DataFrame=None)->Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Pipeline para obtener los datos y prepararlos
         """

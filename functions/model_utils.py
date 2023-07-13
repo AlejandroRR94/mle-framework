@@ -248,12 +248,12 @@ class ModelTrainer():
         
         y_pred = reg.predict(X_test)
         
-        train_metrics = self.save_metrics(model = model, y_true = y_test, y_pred = y_pred)
+        train_metrics = self.create_metrics_dict(model = model, y_true = y_test, y_pred = y_pred)
         
         return model, X_train, (X_test, y_test), y_pred, train_metrics 
     
 
-    def create_metrics_dict(self, model, y_true, y_pred, filename:str, date:datetime):
+    def create_metrics_dict(self, model, y_true, y_pred,  date:datetime=datetime.now()):
          """
          Crea log con las métricas de interés del entrenamiento. Si no existe, 
          lo crea
@@ -265,54 +265,54 @@ class ModelTrainer():
         #  date = datetime.now()
 
          if "gboost" in str(type(model)):
-              model = "xgboost"
+            model = "xgboost"
          else:
-              model="lightgbm"
-         
-         if os.path.isfile(filename) == False:
-            models = [model]
-            dates = [date]
-            R2_score = [r2_score(y_true = y_true, y_pred = y_pred)]
-            MAPE = [mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred)]
-            MAE = [mean_absolute_error(y_true = y_true, y_pred = y_pred)]
-            RMSE = [np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)
-                                         )]
+            model="lightgbm"
             
-            metrics = {
-                 "model":models,
-                 "training_date":dates,
-                 "r2_score":R2_score,
-                 "MAPE":MAPE,
-                 "MAE":MAE,
-                 "RMSE":RMSE
-            }
+        #  if os.path.isfile(filename) == False:
+        #     models = [model]
+        #     dates = [date]
+        #     R2_score = [r2_score(y_true = y_true, y_pred = y_pred)]
+        #     MAPE = [mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred)]
+        #     MAE = [mean_absolute_error(y_true = y_true, y_pred = y_pred)]
+        #     RMSE = [np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)
+        #                                  )]
+            
+        #     metrics = {
+        #          "model":models,
+        #          "training_date":dates,
+        #          "r2_score":R2_score,
+        #          "MAPE":MAPE,
+        #          "MAE":MAE,
+        #          "RMSE":RMSE
+        #     }
 
-            # out_file = open(filename, "w")
-            # json.dump(metrics, out_file, indent=0, default=str)
-            # out_file.close()
-         
-         else:
+        #     # out_file = open(filename, "w")
+        #     # json.dump(metrics, out_file, indent=0, default=str)
+        #     # out_file.close()
             
-              metrics = {
-                "model": model,
-                "training_date": date,
-                "r2_score":r2_score(y_true = y_true, y_pred = y_pred),
-                "MAPE":mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred),
-                "MAE": mean_absolute_error(y_true = y_true, y_pred = y_pred),
-                "RMSE":np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)),
-            }
-              
-             
-         
+        #  else:
+            
+         metrics = {
+        "model": model,
+        "training_date": date,
+        "r2_score":r2_score(y_true = y_true, y_pred = y_pred),
+        "MAPE":mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred),
+        "MAE": mean_absolute_error(y_true = y_true, y_pred = y_pred),
+        "RMSE":np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)),
+        }
+                
+                
+            
          return metrics
     
-    def save_inference_metrics(self, filename:str, model, y_true, y_pred, date):
+    def save_inference_metrics(self, filename:str, model, y_true, y_pred):
         """
         Recibe las métricas calculadas en la función create_metrics_dict()
         y las añade al json existente
         """
         
-        metrics = self.create_metrics_dict(model, y_true, y_pred, filename, date=date)
+        metrics = self.create_metrics_dict(model, y_true, y_pred, filename)
 
         if os.path.isfile(filename): 
             with open(filename) as il:

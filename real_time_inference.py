@@ -15,6 +15,7 @@ import pathlib
 import sys
 import joblib
 import datetime
+import argparse
 
 
 class real_time_inference():
@@ -26,6 +27,12 @@ class real_time_inference():
     def data_preparation(self):
     # Extraemos los datos de la url
         
+        if len(sys.argv) > 1:
+            self.n_rows = sys.argv[1]
+        else:
+            self.n_rows = self.n_rows
+
+        print(f"Realizando inferencia sobre {self.n_rows} registros")
         extraction = extract_data.fn(
             url= 'https://api.energidataservice.dk/dataset/CO2Emis?limit=5',
             n_rows = self.n_rows
@@ -68,10 +75,20 @@ class real_time_inference():
 
         # Actualizamos el json de métricas
         mt.save_inference_metrics(filename= "logs/inference_logs.json",
-                                    model=model, y_true = y, y_pred = predictions, date=date
+                                    model=model, y_true = y, y_pred = predictions
                                     )
         
 if __name__ == "__main__":
 
-    rti = real_time_inference(n_rows=100)
+
+    # Crea el analizador de argumentos
+    parser = argparse.ArgumentParser(description='Extracción de pocos registros de la API')
+
+    # Agrega argumentos
+    parser.add_argument('n_rows', help='Número de registros a extraer de la API')
+
+    # Analiza los argumentos de la línea de comandos
+    args = parser.parse_args()
+
+    rti = real_time_inference(n_rows=args.n_rows)
     rti.inference()

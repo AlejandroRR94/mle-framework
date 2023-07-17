@@ -5,6 +5,7 @@
 data/real_time_data/ 
 data/real_time_data/attributes 
 data/real_time_data/targets
+prueba.ipynb
 
 __pycache__
 /arn:aws:s3:::model-experiment

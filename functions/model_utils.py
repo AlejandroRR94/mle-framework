@@ -222,7 +222,8 @@ class ModelTrainer():
                                                 early_stopping_rounds=50,
                                                 objective = "reg:squarederror",
                                                 max_depth = 3,
-                                                learning_rate = 0.01)
+                                                learning_rate = 0.01,
+                                                )
             
             ligth_reg = LGBMRegressor(base_score=0.5, booster = "gbtree",
                                                 n_estimators=1000,
@@ -253,7 +254,7 @@ class ModelTrainer():
         return model, X_train, (X_test, y_test), y_pred, train_metrics 
     
 
-    def create_metrics_dict(self, model, y_true, y_pred,  date:datetime=datetime.now()):
+    def create_metrics_dict(self, model, y_true, y_pred):
          """
          Crea log con las métricas de interés del entrenamiento. Si no existe, 
          lo crea
@@ -295,11 +296,14 @@ class ModelTrainer():
             
          metrics = {
         "model": model,
-        "training_date": date,
-        "r2_score":r2_score(y_true = y_true, y_pred = y_pred),
-        "MAPE":mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred),
-        "MAE": mean_absolute_error(y_true = y_true, y_pred = y_pred),
-        "RMSE":np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)),
+        "training_date": datetime.now(),
+        "r2_score":round(float(r2_score(y_true = y_true, y_pred = y_pred)), 2),
+        "MAPE":round(float(mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred)), 2),
+        "MAE": round(float(mean_absolute_error(y_true = y_true, y_pred = y_pred)), 2),
+        "RMSE":round(float(np.sqrt(mean_squared_error(y_true = y_true, y_pred = y_pred)
+                                   )
+                           ),2
+                     ),
         }
                 
                 
@@ -312,7 +316,7 @@ class ModelTrainer():
         y las añade al json existente
         """
         
-        metrics = self.create_metrics_dict(model, y_true, y_pred, filename)
+        metrics = self.create_metrics_dict(model, y_true, y_pred)
 
         if os.path.isfile(filename): 
             with open(filename) as il:
@@ -325,7 +329,7 @@ class ModelTrainer():
             json.dump(inference_json, out_file, indent = 0, default = str)
             out_file.close()
 
-            return inference_json
+            return metrics, inference_json
         
         else:
             with open(filename, "w") as out_file:

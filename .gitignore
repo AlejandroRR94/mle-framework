@@ -3,6 +3,7 @@
 /data/raw
 /data/real_time_data
 /data/test
+prueba.ipynb
 
 __pycache__
 /arn:aws:s3:::model-experiment

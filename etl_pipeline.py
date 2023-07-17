@@ -32,7 +32,7 @@ def extract_data(url:str, n_rows:int=150)->json:
     """
     split_url = url.split("=")[0]
     full_url  =  split_url + "=" +  str(n_rows)
-    print(full_url)
+    print("Extrayendo datos de la URL. . .")
 
     response = requests.get(
                             full_url

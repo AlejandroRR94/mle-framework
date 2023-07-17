@@ -20,7 +20,7 @@ def get_last_model(path:str=None, format:str="pkl"):
     # file_dict = {os.path.getmtime(f):f for f in files}
     file_dict = {os.path.getmtime(f)+i:f for f,i in zip(files, range(len(files)))}
     
-    return file_dict[min(file_dict.keys())]
+    return file_dict[max(file_dict.keys())]
 
 # @pytest.fixture
 def load_model(filename:str):

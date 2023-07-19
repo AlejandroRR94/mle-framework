@@ -5,6 +5,7 @@
 data/real_time_data/ 
 data/real_time_data/attributes 
 data/real_time_data/targets
+/data/data_traceability
 prueba.ipynb
 
 __pycache__

@@ -8,6 +8,7 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, r2_score
 import xgboost as xgb
 from lightgbm import LGBMRegressor
+import mlflow
 
 import pickle
 import joblib
@@ -296,6 +297,9 @@ class ModelTrainer():
 
          if "gboost" in str(type(model)):
             model = "xgboost"
+         elif type(model) == mlflow.pyfunc.PyFuncModel:
+              if "xgboost" in list(model._model_meta.flavors.keys()):
+                   model = "xgboost"
          else:
             model="lightgbm"
             

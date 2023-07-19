@@ -33,6 +33,8 @@ class ModelTrainer():
     def __init__(self, df:pd.DataFrame, target:str):
         self.df = df # Dataframe para utilizar
         self.target = target # Nombre de la columna objetivo
+        self.train_idx_path = None
+        self.test_idx_path = None
 
     # @task
     def train_k_fold(self, k:int=4, test_size:int = 100, gap:int=0)->Tuple[list, list]:
@@ -155,9 +157,12 @@ class ModelTrainer():
         if os.path.isdir(save_path) == False:
              os.mkdir(save_path)
         
+        self.train_idx_path = os.path.join(save_path, f"train_idx_{date_now}.pkl")
+        self.test_idx_path = os.path.join(save_path, f"test_idx_{date_now}.pkl")
+        
         # Guardamos los índices de entrenamiento y evaluación en su carpeta correspondiente
-        joblib.dump(train_idx, os.path.join(save_path, f"train_idx_{date_now}"))
-        joblib.dump(test_idx, os.path.join(save_path, f"test_idx_{date_now}"))
+        joblib.dump(train_idx, self.train_idx_path)
+        joblib.dump(test_idx, self.test_idx_path)
 
 
     def training_split(self, test_percentage:float=0.2):
@@ -330,6 +335,8 @@ class ModelTrainer():
          metrics = {
         "model": model,
         "training_date": datetime.now(),
+        "train_data": self.train_idx_path,
+        "test_data": self.test_idx_path,
         "r2_score":round(float(r2_score(y_true = y_true, y_pred = y_pred)), 2),
         "MAPE":round(float(mean_absolute_percentage_error(y_true = y_true, y_pred = y_pred)), 2),
         "MAE": round(float(mean_absolute_error(y_true = y_true, y_pred = y_pred)), 2),
@@ -355,7 +362,13 @@ class ModelTrainer():
             with open(filename) as il:
                     inference_json = json.load(il)
             
-            for k, v in zip(inference_json.keys(), metrics.values()):
+            new_columns = set(list(metrics.keys())) - set(list(inference_json.keys()))
+            
+            for column in new_columns:
+                 inference_json[column] = []
+            sorted_metrics = {k:metrics[k] for k in sorted(metrics)}
+            
+            for k, v in zip(sorted(inference_json.keys()), sorted_metrics.values()):
                     inference_json[k].append(v)
 
             out_file = open(filename, "w")

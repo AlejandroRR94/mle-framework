@@ -92,7 +92,9 @@ with mlflow.start_run():
 
     signature = infer_signature(X_train, y_pred)
     # mlflow.log_metrics(metrics)
-    mlflow.log_metrics(metrics={k:current_metrics[k] for k in list(current_metrics.keys()) if k not in ["model", "training_date"]})
+    mlflow.log_metrics(metrics={k:current_metrics[k] for k in list(current_metrics.keys()) if k not in ["model", "training_date",
+                                                                                                        "train_data",
+                                                                                                         "test_data" ]})
     mlflow.xgboost.log_model(model, signature=signature, artifact_path=artifact_path)
 
 

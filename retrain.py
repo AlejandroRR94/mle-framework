@@ -52,4 +52,4 @@ print(f"Last Model: {last_model}")
 
 with mlflow.start_run():
 
-    mt = ModelTrainer(df)
+    mt = ModelTrainer(df_last_clean)

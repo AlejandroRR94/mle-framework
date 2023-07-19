@@ -8,11 +8,13 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, r2_score
 import xgboost as xgb
 from lightgbm import LGBMRegressor
+
 import pickle
 import joblib
-import datetime
+from datetime import date
 import pandas as pd
 from typing import Tuple
+from pathlib import Path
 
 from functions.prepare_data_utils import *
 
@@ -135,6 +137,28 @@ class ModelTrainer():
         
         plt.show()
 
+    def save_idxs(self, train_idx, test_idx):
+        """
+        Guarda los índices de los registros de los conjuntos de entrenamiento y validación
+        """
+         
+        date_today = date.today()
+        date_now = datetime.now()
+        save_path = os.path.join(Path().absolute(), "data/data_traceability", str(date_today))
+
+        # Comprobamos que existe el directorio y, en caso contrario, lo creamos
+        if os.path.isdir(os.path.join(Path().absolute(), "data/data_traceability")) == False:
+             os.mkdir(os.path.join(Path().absolute(), "data/data_traceability"))
+        
+        # Creamos la carpeta para los datos de hoy
+        if os.path.isdir(save_path) == False:
+             os.mkdir(save_path)
+        
+        # Guardamos los índices de entrenamiento y evaluación en su carpeta correspondiente
+        joblib.dump(train_idx, os.path.join(save_path, f"train_idx_{date_now}"))
+        joblib.dump(test_idx, os.path.join(save_path, f"test_idx_{date_now}"))
+
+
     def training_split(self, test_percentage:float=0.2):
         """
         Realiza la separación entre los conjuntos de entrenamiento y
@@ -153,11 +177,16 @@ class ModelTrainer():
         val_size = int(test_size/2)
         
         train_set = self.df[:-(test_size)]
+        train_idx = train_set.index
         # val_set = self.df[-(test_size + val_size): - test_size]
             
         test_set = self.df[-test_size:]
+        test_idx = test_set.index
+
+        self.save_idxs(train_idx=train_idx, test_idx=test_idx) #Guardamos las 
 
         return train_set, test_set
+    
     
     def make_x_y(self, data_set:pd.DataFrame)->Tuple[pd.DataFrame, pd.DataFrame]:
         """

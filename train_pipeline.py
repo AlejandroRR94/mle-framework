@@ -50,7 +50,7 @@ with mlflow.start_run():
     if not os.path.isdir(artifact_path): 
         os.makedirs(artifact_path)
         print("carpeta de modelos creada")
-        os.chmod(model_path, 0o777)
+        # os.chmod(model_path, 0o777)
     
     params = {
     'n_estimators': 1000,

@@ -1,8 +1,16 @@
 /data/clean
 /data/database
 /data/raw
+
 /data/real_time_data
+data/real_time_data/attributes 
+data/real_time_data/targets
+
 /data/test
+
+/data/data_traceability
+
+
 prueba.ipynb
 
 __pycache__

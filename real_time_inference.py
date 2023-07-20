@@ -78,7 +78,8 @@ class real_time_inference():
         joblib.dump(X, f"data/real_time_data/attributes/realtime_attributes_{date}.pkl")
         joblib.dump(y, f"data/real_time_data/targets/realtime_targets_{date}.pkl")
 
-        predictions = model.predict(X)      
+        predictions = model.predict(X)
+        joblib.dump(predictions, f"data/real_time_data/predictions/predictions_ {date}.pkl")     
 
         # Instanciamos la clase ModelTrainer para hacer uso de sus métodos
         mt = ModelTrainer(df=df_1, target="co2_emissions")

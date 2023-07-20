@@ -37,6 +37,8 @@
 "xgboost",
 "xgboost",
 "xgboost",
+"xgboost",
+"xgboost",
 "xgboost"
 ],
 "training_date": [
@@ -77,7 +79,9 @@
 "2023-07-19 10:38:21.852296",
 "2023-07-19 11:16:13.980107",
 "2023-07-19 11:16:52.601962",
-"2023-07-19 11:43:35.046878"
+"2023-07-19 11:43:35.046878",
+"2023-07-19 12:11:11.039074",
+"2023-07-20 14:32:37.206067"
 ],
 "r2_score": [
 0.7684004506612717,
@@ -115,7 +119,9 @@
 0.88,
 0.89,
 0.89,
-0.98
+0.98,
+0.93,
+-5.05
 ],
 "MAPE": [
 0.07750387429522355,
@@ -155,7 +161,9 @@
 0.11,
 0.06,
 0.06,
-0.06
+0.06,
+0.15,
+0.52
 ],
 "MAE": [
 9.675440292358399,
@@ -194,7 +202,9 @@
 6.36,
 4.58,
 4.58,
-4.58
+4.58,
+6.49,
+10.38
 ],
 "RMSE": [
 13.408696386560772,
@@ -233,12 +243,18 @@
 16.12,
 7.23,
 7.23,
-7.23
+7.23,
+13.56,
+11.28
 ],
 "test_data": [
-"/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/data/data_traceability/2023-07-19/test_idx_2023-07-19 11:43:22.824479.pkl"
+"/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/data/data_traceability/2023-07-19/test_idx_2023-07-19 11:43:22.824479.pkl",
+null,
+null
 ],
 "train_data": [
-"/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/data/data_traceability/2023-07-19/train_idx_2023-07-19 11:43:22.824479.pkl"
+"/home/arr/Documents/workspace/BS/productivizacion/MLE_FW/mle-framework/data/data_traceability/2023-07-19/train_idx_2023-07-19 11:43:22.824479.pkl",
+null,
+null
 ]
 }

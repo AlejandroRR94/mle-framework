@@ -5,6 +5,8 @@
 data/real_time_data/ 
 data/real_time_data/attributes 
 data/real_time_data/targets
+data/real_time_data/predictions
+
 /data/data_traceability
 prueba.ipynb
 

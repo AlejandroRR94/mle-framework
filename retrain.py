@@ -52,4 +52,9 @@ print(f"Last Model: {last_model}")
 
 with mlflow.start_run():
 
-    mt = ModelTrainer(df_last_clean)
+    mt = ModelTrainer(df_last_clean, target="target")
+    model = mt.load_model(last_model)
+
+    retrained_model = mt.retrain_model(model,X = attributes_df, y = target_df)
+    model_name, model_path, artifact_path, timestamp_today, experiment_name = mt.set_directories()
+    mt.save_model(retrained_model, filename=)

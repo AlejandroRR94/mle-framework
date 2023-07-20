@@ -331,7 +331,8 @@ class ModelTrainer():
         #     # out_file.close()
             
         #  else:
-            
+        
+
          metrics = {
         "model": model,
         "training_date": datetime.now(),
@@ -455,7 +456,7 @@ class ModelTrainer():
     
          
         
-    def load_model(self, model:object, filename:str):
+    def load_model(self, filename:str):
          
          """
          Cargamos el modelo
@@ -464,3 +465,28 @@ class ModelTrainer():
          xgb_model = joblib.load(filename)
 
          return xgb_model
+    
+    def retrain_model(self, model:object, X, y):
+         
+         model.fit(X, y)
+
+         return model
+    
+    def set_directories(self):
+        """
+        Establece variables para que se usen en la denominación de ficheros
+        """
+        timestamp_today = datetime.now()
+        date_today = date.today()
+        experiment_name = f"experiment_{date_today}"
+        print(date_today)
+        artifact_path =f"MODELOS/modelo_{date_today}"
+        print(artifact_path)
+        model_name = f"modelo_xgboost_{timestamp_today}.pkl"
+        model_path = os.path.join(artifact_path, model_name)
+        print(model_path)
+        if not os.path.isdir(artifact_path): 
+            os.makedirs(artifact_path)
+            print("carpeta de modelos creada")
+
+        return model_name, model_path, artifact_path, timestamp_today, experiment_name
